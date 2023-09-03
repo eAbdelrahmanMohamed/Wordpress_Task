@@ -8,8 +8,11 @@
 //   document.getElementById("contanier").getAttribute("data-posts")
 // );
 // let limit = (page + 1) * count;
+// ============================== the above section to make those public and can access from all file ==============
 
+// ==============POST BTN ==================================
 jQuery("#btnpost").on("click", function () {
+  // when post button is clicked
   let count = parseInt(
     document.getElementById("contanier").getAttribute("data-count")
   );
@@ -19,34 +22,37 @@ jQuery("#btnpost").on("click", function () {
   let posts_count = parseInt(
     document.getElementById("contanier").getAttribute("data-posts")
   );
-  let limit = (page + 1) * count;
+  let limit = (page + 1) * count; //
+  //   below line is to prevent multiple clicks
   jQuery(this).attr("disabled", true);
 
-  Content = document.getElementById("content").value;
-  uid = document.getElementById("head").getAttribute("data-uid");
+  Content = document.getElementById("content").value; //input text content
+  uid = document.getElementById("head").getAttribute("data-uid"); //user id
   console.log("page " + page + " count " + count);
   if (Content === "") {
+    // if user didn't write any thing it can't post
     alert("please fill posts content");
   } else if (page > 1) {
+    //if there are more than 5 posts then
     jQuery.ajax({
       type: "POST",
       url: jQuery("meta[name=ajax_url]").attr("content"),
       data: {
-        action: "create_post",
-        dataType: "html",
+        action: "create_post", // functon name
+        dataType: "html", //return type expected
         content: Content,
         offset: count * page,
-        // user_id: uid,
+        user_id: uid,
       },
       success: function (posts) {
-        jQuery("#btnpost").attr("disabled", false);
-
-        document.getElementById("content").value = "";
-        document.getElementById("contanier").innerHTML = posts;
-        jQuery("#contanier").attr("data-posts", parseInt(posts_count) + 1);
+        jQuery("#btnpost").attr("disabled", false); //remove disabled from post button and return functionalty
+        document.getElementById("content").value = ""; // reset input text
+        document.getElementById("contanier").innerHTML = posts; //post returned result to div
+        jQuery("#contanier").attr("data-posts", parseInt(posts_count) + 1); // update number of posts total
       },
     });
   } else {
+    // if posts is less than or equal 5 (page 1)
     jQuery.ajax({
       type: "POST",
       url: jQuery("meta[name=ajax_url]").attr("content"),
@@ -54,6 +60,7 @@ jQuery("#btnpost").on("click", function () {
         action: "create_post",
         dataType: "html",
         content: Content,
+        user_id: uid,
       },
       success: function (posts) {
         jQuery("#btnpost").attr("disabled", false);
@@ -63,9 +70,11 @@ jQuery("#btnpost").on("click", function () {
       },
     });
   }
-});
+}); // i wanted to use offset as optional param but i couldn't to enchance code
 
+// ==============DELETE BTN ==================================
 jQuery("#contanier").on("click", ".delete", function (event) {
+  //when delete button is clicked
   event.preventDefault();
   let count = parseInt(
     document.getElementById("contanier").getAttribute("data-count")
@@ -78,8 +87,7 @@ jQuery("#contanier").on("click", ".delete", function (event) {
   );
   let limit = (page + 1) * count;
 
-  post_id = jQuery(this).attr("data-id");
-  console.log("delete is clicked and id is " + post_id);
+  post_id = jQuery(this).attr("data-id"); //get id for post which is clicked on
   if (page > 1) {
     jQuery.ajax({
       type: "POST",
@@ -92,12 +100,15 @@ jQuery("#contanier").on("click", ".delete", function (event) {
         offset: count * page,
       },
       success: function (posts) {
-        //   console.log(posts);
         document.getElementById("alert").innerText =
-          "post " + post_id + " removed successfully";
-        document.getElementById(post_id).style.display = "none";
-        document.getElementById("contanier").innerHTML = posts;
-        jQuery("#contanier").attr("data-posts", parseInt(posts_count) - 1);
+          "post " + post_id + " removed successfully"; // this is a notification message
+        document.getElementById(post_id).style.display = "none"; // hide post from html
+        // we can also use to remove it
+        document.getElementById(post_id).remove();
+        // or
+        // document.getElementById(post_id).parentElement.removeChild(document.getElementById(post_id));
+        document.getElementById("contanier").innerHTML = posts; // place the new posts html
+        jQuery("#contanier").attr("data-posts", parseInt(posts_count) - 1); // reclac posts total number
       },
     });
   } else {
@@ -111,10 +122,10 @@ jQuery("#contanier").on("click", ".delete", function (event) {
         pid: post_id,
       },
       success: function (posts) {
-        //   console.log(posts);
         document.getElementById("alert").innerText =
           "post " + post_id + " removed successfully";
         document.getElementById(post_id).style.display = "none";
+        document.getElementById(post_id).remove();
         document.getElementById("contanier").innerHTML = posts;
         jQuery("#contanier").attr("data-posts", parseInt(posts_count) - 1);
       },
@@ -122,7 +133,7 @@ jQuery("#contanier").on("click", ".delete", function (event) {
   }
 });
 
-// /////////////////////////////////////////////
+// ============== SEE MORE BTN =============================
 jQuery("#SeeMore").on("click", function () {
   let count = parseInt(
     document.getElementById("contanier").getAttribute("data-count")
@@ -135,10 +146,10 @@ jQuery("#SeeMore").on("click", function () {
   );
   let limit = (page + 1) * count;
   if (
+    // if user reached the end of posts / pages
     limit > posts_count &&
     document.getElementById("SeeMore").innerText == "See Less"
   ) {
-    console.log("limit from 1 is " + limit + " and pcount " + posts_count);
     jQuery.ajax({
       // send call
       type: "POST",
@@ -147,37 +158,30 @@ jQuery("#SeeMore").on("click", function () {
         action: "display_posts",
       },
       success: function (posts) {
-        jQuery("#contanier").attr("data-page", 1);
-
-        document.getElementById("contanier").innerHTML = posts;
-        document.getElementById("SeeMore").innerText = "See More";
+        jQuery("#contanier").attr("data-page", 1); //reset pages counter to 1
+        document.getElementById("contanier").innerHTML = posts; // put posts html
+        document.getElementById("SeeMore").innerText = "See More"; // reset / make button text
       },
     });
   } else {
-    console.log("limit from 2 is " + limit + " and pcount " + posts_count);
-
     jQuery.ajax({
       // send call
       type: "POST",
       url: jQuery("meta[name=ajax_url]").attr("content"),
       data: {
         action: "see_more",
-        page: page,
-        posts: posts_count,
-        count: count,
+        page: page, //page number
+        posts: posts_count, //posts total nubmer
+        count: count, // posts count listed
       },
       success: function (posts) {
-        jQuery("#contanier").attr("data-page", parseInt(page) + 1);
-
-        jQuery("#contanier").append(posts);
+        jQuery("#contanier").attr("data-page", parseInt(page) + 1); //increase pages by 1
+        jQuery("#contanier").append(posts); // add new posts to the page
 
         if (limit > posts_count) {
-          // document.getElementById("SeeMore").style.display = "none";
+          //if user reached the end of posts change btn text
           document.getElementById("SeeMore").innerText = "See Less";
         }
-        //   if (limit < posts_count) {
-        //     document.getElementById("SeeMore").style.display = "block";
-        //   }
       },
     });
   }

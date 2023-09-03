@@ -1,20 +1,20 @@
 <?php
 require_once 'header.php';
 $current_user = wp_get_current_user();
-$display_name = $current_user->display_name;
-$display_id = $current_user->ID;
-// get_the_author_meta('ID'); 
-$author_avatar = get_avatar($display_id, 32);
-if (!defined('ABSPATH')) {
+$display_name = $current_user->display_name; // get logged in user name
+$display_id = $current_user->ID; // get logged in user id
+$author_avatar = get_avatar($display_id, 32); // avatar icon /image for user
+if (!defined('ABSPATH')) { //prevents direct access
     exit;
 }
-if (!is_user_logged_in()) {
+if (!is_user_logged_in()) { // prevent access to news page whithout login
     echo "please log in first to see posts";
+    // this is the login form
     wp_login_form(array(
         'echo' => true,
     ));
 } else {
-
+    //  if user logged in start list first 5 posts
     $args = array(
         'post_type'        => 'post',
         'posts_per_page'   => 5,
@@ -22,7 +22,7 @@ if (!is_user_logged_in()) {
 
     );
     $all_posts = get_posts($args);
-
+    //  calculate all posts number
     $count = array(
         'post_type'        => 'post',
         'posts_per_page'   => -1,
@@ -30,14 +30,13 @@ if (!is_user_logged_in()) {
 
     );
     $posts_count = count(get_posts($count));
-    // $author_id, $author_name;
 
 ?>
 
     <body>
+        <!-- the alert div display when post is deleted successfly -->
         <div id="alert"></div>
         <div id="head" data-uid=<?php echo $display_id; ?>>
-            <!-- <img src="https://www.pngarts.com/files/11/Avatar-PNG-Picture.png" alt="" id="icon"> -->
             <div id="icon"><?php echo $author_avatar ?></div>
             <input type="text" placeholder="what's in your mind" id="content">
             <button id="btnpost" class="btn">post</button>
@@ -45,10 +44,6 @@ if (!is_user_logged_in()) {
         <?php
 
         if ($all_posts) {
-            // $author_id = get_the_author_meta('ID');
-            // $author_name = get_the_author();
-
-
         ?>
             <div id="contanier" data-page="1" data-count="5" data-posts="<?php echo $posts_count; ?>">
                 <?php foreach ($all_posts as $post) {
@@ -76,6 +71,7 @@ if (!is_user_logged_in()) {
             }
             ?>
             </div>
+            <!-- if posts total is less than or equal to 5 there no need to show button -->
             <?php if ($posts_count > 5) { ?>
                 <button id="SeeMore" class="btn">See More</button>
             <?php } ?>

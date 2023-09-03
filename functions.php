@@ -1,8 +1,17 @@
 <?php
-wp_enqueue_style('style', get_stylesheet_uri());
+wp_enqueue_style('style', get_stylesheet_uri()); //load style sheet
+// load the js file
 wp_enqueue_script('script', get_template_directory_uri() . './main.js', array('jquery'), 1.1, true);
-add_action('wp_ajax_nopriv_display_posts', 'display_posts');
+// add_action('wp_ajax_nopriv_display_posts', 'display_posts');
+// fires only when user is logged in 
 add_action('wp_ajax_display_posts', 'display_posts');
+/**
+ * @return =>
+ * posts template html 
+ * @param =>
+ *  default (5) posts
+ * 
+ */
 function display_posts($args = array(
     'post_type'        => 'post',
     'posts_per_page'   => 5,
@@ -17,8 +26,7 @@ function display_posts($args = array(
 
     ob_start();
     $all_posts = get_posts($args);
-    // var_dump($args);
-    // wp_die();
+
     if ($all_posts) {
         foreach ($all_posts as $post) {
             setup_postdata($post);
@@ -48,7 +56,11 @@ function display_posts($args = array(
 }
 
 // ===========================================================
-add_action('wp_ajax_nopriv_create_post', 'create_post');
+// add_action('wp_ajax_nopriv_create_post', 'create_post');
+/**
+ * @return 
+ * create new post 
+ */
 add_action('wp_ajax_create_post', 'create_post');
 function create_post()
 {
@@ -63,12 +75,11 @@ function create_post()
         'post_date' => date('Y-m-d H:i:s'),
         'post_author' => $user_ID,
         'post_type' => 'post',
-        'post_category' => array(0)
     );
     wp_insert_post($new_post);
-    // $counter++;
+    //check if there are more than or equal 5 posts listed
+    // then add this new post created to page without rearrange page content 
     if ($ismore) {
-
         return display_posts(array(
             'post_type'        => 'post',
             'posts_per_page'   => $_POST['offset'] + 1,
@@ -79,17 +90,20 @@ function create_post()
     }
 }
 // ----------------------------
-add_action('wp_ajax_nopriv_delete_post', 'delete_post');
+// add_action('wp_ajax_nopriv_delete_post', 'delete_post');
+/**
+ * @return 
+ * delete selected post with id
+ */
 add_action('wp_ajax_delete_post', 'delete_post');
 function delete_post()
 {
-    // $post_id = $_POST['pid'];
     $post_id = $_POST['pid'];
     $ismore = isset($_POST['offset']);
-
     wp_delete_post($post_id);
+    //check if there are more than or equal 5 posts listed
+    // then add this new post created to page without rearrange page content 
     if ($ismore) {
-
         return display_posts(array(
             'post_type'        => 'post',
             'posts_per_page'   => $_POST['offset'] - 1,
@@ -100,8 +114,12 @@ function delete_post()
     }
 }
 // ---------------------------------
-add_action('wp_ajax_nopriv_see_more', 'see_more');
+// add_action('wp_ajax_nopriv_see_more', 'see_more');
 add_action('wp_ajax_see_more', 'see_more');
+/**
+ * @return
+ * load more 5 posts to page
+ */
 function see_more()
 {
     $posts_per_page = $_POST['posts'];
