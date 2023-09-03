@@ -9,10 +9,7 @@
 // );
 // let limit = (page + 1) * count;
 // ============================== the above section to make those public and can access from all file ==============
-
-// ==============POST BTN ==================================
-jQuery("#btnpost").on("click", function () {
-  // when post button is clicked
+function Show_Hide() {
   let count = parseInt(
     document.getElementById("contanier").getAttribute("data-count")
   );
@@ -22,13 +19,37 @@ jQuery("#btnpost").on("click", function () {
   let posts_count = parseInt(
     document.getElementById("contanier").getAttribute("data-posts")
   );
-  let limit = (page + 1) * count; //
+  let child_nodes_count =
+    document.getElementById("contanier").childElementCount;
+
+  let limit = page * child_nodes_count;
+  console.log("limit is " + limit + " and page is" + page);
+  if (posts_count > 5) {
+    document.getElementById("SeeMore").style.display = "block";
+  } else {
+    document.getElementById("SeeMore").style.display = "none";
+  }
+}
+document.addEventListener("change", Show_Hide());
+document.addEventListener("load", Show_Hide());
+// ==============POST BTN ==================================
+jQuery("#btnpost").on("click", function () {
+  // when post button is clicked
+  let count = parseInt(
+    document.getElementById("contanier").getAttribute("data-count")
+  );
+  //   let child_nodes_count=document.getElementById("contanier").childElementCount;
+  let page = parseInt(
+    document.getElementById("contanier").getAttribute("data-page")
+  );
+  let posts_count = parseInt(
+    document.getElementById("contanier").getAttribute("data-posts")
+  );
   //   below line is to prevent multiple clicks
   jQuery(this).attr("disabled", true);
 
   Content = document.getElementById("content").value; //input text content
   uid = document.getElementById("head").getAttribute("data-uid"); //user id
-  console.log("page " + page + " count " + count);
   if (Content === "") {
     // if user didn't write any thing it can't post
     alert("please fill posts content");
@@ -49,6 +70,7 @@ jQuery("#btnpost").on("click", function () {
         document.getElementById("content").value = ""; // reset input text
         document.getElementById("contanier").innerHTML = posts; //post returned result to div
         jQuery("#contanier").attr("data-posts", parseInt(posts_count) + 1); // update number of posts total
+        document.getElementById("SeeMore").style.display = "block";
       },
     });
   } else {
@@ -67,6 +89,7 @@ jQuery("#btnpost").on("click", function () {
         document.getElementById("content").value = "";
         document.getElementById("contanier").innerHTML = posts;
         jQuery("#contanier").attr("data-posts", parseInt(posts_count) + 1);
+        document.getElementById("SeeMore").style.display = "none";
       },
     });
   }
@@ -85,7 +108,6 @@ jQuery("#contanier").on("click", ".delete", function (event) {
   let posts_count = parseInt(
     document.getElementById("contanier").getAttribute("data-posts")
   );
-  let limit = (page + 1) * count;
 
   post_id = jQuery(this).attr("data-id"); //get id for post which is clicked on
   if (page > 1) {
@@ -109,6 +131,7 @@ jQuery("#contanier").on("click", ".delete", function (event) {
         // document.getElementById(post_id).parentElement.removeChild(document.getElementById(post_id));
         document.getElementById("contanier").innerHTML = posts; // place the new posts html
         jQuery("#contanier").attr("data-posts", parseInt(posts_count) - 1); // reclac posts total number
+        document.getElementById("SeeMore").style.display = "block";
       },
     });
   } else {
@@ -128,6 +151,7 @@ jQuery("#contanier").on("click", ".delete", function (event) {
         document.getElementById(post_id).remove();
         document.getElementById("contanier").innerHTML = posts;
         jQuery("#contanier").attr("data-posts", parseInt(posts_count) - 1);
+        document.getElementById("SeeMore").style.display = "none";
       },
     });
   }

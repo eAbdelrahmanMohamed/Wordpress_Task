@@ -43,7 +43,7 @@ if (!is_user_logged_in()) { // prevent access to news page whithout login
         </div>
         <?php
 
-        if ($all_posts) {
+        if ($all_posts || count($all_posts) == 0) {
         ?>
             <div id="contanier" data-page="1" data-count="5" data-posts="<?php echo $posts_count; ?>">
                 <?php foreach ($all_posts as $post) {
@@ -71,10 +71,15 @@ if (!is_user_logged_in()) { // prevent access to news page whithout login
             }
             ?>
             </div>
-            <!-- if posts total is less than or equal to 5 there no need to show button -->
-            <?php if ($posts_count > 5) { ?>
-                <button id="SeeMore" class="btn">See More</button>
-            <?php } ?>
+            <!-- if posts total is less than or equal to 5 there no need to show button 
+        plan 1
+        -->
+            <!-- plan 2 hide by css -->
+            <?php //if ($posts_count > 5) { 
+            ?>
+            <button id="SeeMore" class="btn" style="display: none;">See More</button>
+            <?php //} 
+            ?>
     </body>
 
 <?php
