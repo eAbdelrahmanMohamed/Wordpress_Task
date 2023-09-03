@@ -20,6 +20,7 @@ jQuery("#btnpost").on("click", function () {
     document.getElementById("contanier").getAttribute("data-posts")
   );
   let limit = (page + 1) * count;
+  jQuery(this).attr("disabled", true);
 
   Content = document.getElementById("content").value;
   uid = document.getElementById("head").getAttribute("data-uid");
@@ -38,6 +39,8 @@ jQuery("#btnpost").on("click", function () {
         // user_id: uid,
       },
       success: function (posts) {
+        jQuery("#btnpost").attr("disabled", false);
+
         document.getElementById("content").value = "";
         document.getElementById("contanier").innerHTML = posts;
         jQuery("#contanier").attr("data-posts", parseInt(posts_count) + 1);
@@ -53,6 +56,7 @@ jQuery("#btnpost").on("click", function () {
         content: Content,
       },
       success: function (posts) {
+        jQuery("#btnpost").attr("disabled", false);
         document.getElementById("content").value = "";
         document.getElementById("contanier").innerHTML = posts;
         jQuery("#contanier").attr("data-posts", parseInt(posts_count) + 1);
