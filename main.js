@@ -30,7 +30,9 @@ function Show_Hide() {
     document.getElementById("SeeMore").style.display = "none";
   }
 }
-document.addEventListener("change", Show_Hide());
+document
+  .getElementById("contanier")
+  .addEventListener("DOMNodeInserted", Show_Hide());
 document.addEventListener("load", Show_Hide());
 // ==============POST BTN ==================================
 jQuery("#btnpost").on("click", function () {
@@ -66,11 +68,13 @@ jQuery("#btnpost").on("click", function () {
         user_id: uid,
       },
       success: function (posts) {
-        jQuery("#btnpost").attr("disabled", false); //remove disabled from post button and return functionalty
-        document.getElementById("content").value = ""; // reset input text
         document.getElementById("contanier").innerHTML = posts; //post returned result to div
-        jQuery("#contanier").attr("data-posts", parseInt(posts_count) + 1); // update number of posts total
-        document.getElementById("SeeMore").style.display = "block";
+        // jQuery("#btnpost").attr("disabled", false); //remove disabled from post button and return functionalty
+        // document.getElementById("content").value = ""; // reset input text
+        // jQuery("#contanier").attr("data-posts", parseInt(posts_count) + 1); // update number of posts total
+        // if (parseInt(jQuery("#contanier").attr("data-posts")) > 5) {
+        //   document.getElementById("SeeMore").style.display = "block";
+        // }
       },
     });
   } else {
@@ -85,13 +89,21 @@ jQuery("#btnpost").on("click", function () {
         user_id: uid,
       },
       success: function (posts) {
-        jQuery("#btnpost").attr("disabled", false);
-        document.getElementById("content").value = "";
         document.getElementById("contanier").innerHTML = posts;
-        jQuery("#contanier").attr("data-posts", parseInt(posts_count) + 1);
-        document.getElementById("SeeMore").style.display = "none";
+        // jQuery("#btnpost").attr("disabled", false);
+        // document.getElementById("content").value = "";
+        // jQuery("#contanier").attr("data-posts", parseInt(posts_count) + 1);
+        // document.getElementById("SeeMore").style.display = "none";
       },
     });
+  }
+  jQuery("#btnpost").attr("disabled", false); //remove disabled from post button and return functionalty
+  document.getElementById("content").value = ""; // reset input text
+  jQuery("#contanier").attr("data-posts", parseInt(posts_count) + 1); // update number of posts total
+  if (parseInt(jQuery("#contanier").attr("data-posts")) > 5) {
+    document.getElementById("SeeMore").style.display = "block";
+  } else {
+    document.getElementById("SeeMore").style.display = "none";
   }
 }); // i wanted to use offset as optional param but i couldn't to enchance code
 
@@ -130,8 +142,8 @@ jQuery("#contanier").on("click", ".delete", function (event) {
         // or
         // document.getElementById(post_id).parentElement.removeChild(document.getElementById(post_id));
         document.getElementById("contanier").innerHTML = posts; // place the new posts html
-        jQuery("#contanier").attr("data-posts", parseInt(posts_count) - 1); // reclac posts total number
-        document.getElementById("SeeMore").style.display = "block";
+        // jQuery("#contanier").attr("data-posts", parseInt(posts_count) - 1); // reclac posts total number
+        // document.getElementById("SeeMore").style.display = "block";
       },
     });
   } else {
@@ -150,10 +162,16 @@ jQuery("#contanier").on("click", ".delete", function (event) {
         document.getElementById(post_id).style.display = "none";
         document.getElementById(post_id).remove();
         document.getElementById("contanier").innerHTML = posts;
-        jQuery("#contanier").attr("data-posts", parseInt(posts_count) - 1);
-        document.getElementById("SeeMore").style.display = "none";
+        // jQuery("#contanier").attr("data-posts", parseInt(posts_count) - 1);
+        // document.getElementById("SeeMore").style.display = "none";
       },
     });
+  }
+  jQuery("#contanier").attr("data-posts", parseInt(posts_count) - 1); // update number of posts total
+  if (parseInt(jQuery("#contanier").attr("data-posts")) > 5) {
+    document.getElementById("SeeMore").style.display = "block";
+  } else {
+    document.getElementById("SeeMore").style.display = "none";
   }
 });
 
