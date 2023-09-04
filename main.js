@@ -32,8 +32,8 @@ function Show_Hide() {
 }
 document
   .getElementById("contanier")
-  .addEventListener("DOMNodeInserted", Show_Hide()); // to ensure see more be visible when change happens in contanier div
-document.addEventListener("load", Show_Hide()); // this to ensure see more is visible on when page loaded
+  .addEventListener("DOMNodeInserted", Show_Hide); // to ensure see more be visible when change happens in contanier div
+document.addEventListener("DOMContentLoaded", Show_Hide); // this to ensure see more is visible on when page loaded
 // ==============POST BTN ==================================
 jQuery("#btnpost").on("click", function () {
   // when post button is clicked
