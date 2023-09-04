@@ -37,7 +37,7 @@ if (!is_user_logged_in()) { // prevent access to news page whithout login
         <!-- the alert div display when post is deleted successfly -->
         <div id="alert"></div>
         <div id="head" data-uid=<?php echo $display_id; ?>>
-            <div id="icon"><?php echo $author_avatar ?></div>
+            <div id="icon"><?php echo $author_avatar . $display_name; ?></div>
             <input type="text" placeholder="what's in your mind" id="content">
             <button id="btnpost" class="btn">post</button>
         </div>
@@ -52,7 +52,7 @@ if (!is_user_logged_in()) { // prevent access to news page whithout login
 
                     <div class="post" id=<?php echo get_the_id(); ?>>
                         <div class="author_icon">
-                            <div id="icon"><?php echo $author_avatar ?></div>
+                            <div id="icon"><?php echo $author_avatar; ?></div>
                         </div>
                         <div class="author_post">
                             <div class="author-name"><?php echo $display_name; ?></div>
